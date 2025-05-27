@@ -1,2 +1,3 @@
-# beagle-v2
-Beagle chat application with more features
+# Beagle V2
+
+Beagle chat application written again with more features and a more goodlooking UI (hopefully)
