@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router'
-import { UserAuth } from './context/AuthContext'
+import { UserAuth } from '../context/AuthContext'
 
-function Dashboard() {
+function Lobby() {
   const { session, signOut }: any = UserAuth()
   const navigate = useNavigate()
 
@@ -29,4 +29,4 @@ function Dashboard() {
   )
 }
 
-export default Dashboard
+export default Lobby

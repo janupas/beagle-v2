@@ -1,12 +1,12 @@
+import App from './pages/App.tsx'
 import { StrictMode } from 'react'
+import Lobby from './pages/Lobby.tsx'
+import SignIn from './pages/SignIn.tsx'
+import SignUp from './pages/Signup.tsx'
 import { createRoot } from 'react-dom/client'
-import App from './App.tsx'
-import { createBrowserRouter, RouterProvider } from 'react-router'
-import SignIn from './SignIn.tsx'
-import SignUp from './Signup.tsx'
-import { AuthContextProvider } from './context/AuthContext.tsx'
-import Dashboard from './Dashboard.tsx'
 import PrivateRoute from './components/PrivateRoute.tsx'
+import { AuthContextProvider } from './context/AuthContext.tsx'
+import { createBrowserRouter, RouterProvider } from 'react-router'
 
 const router = createBrowserRouter([
   {
@@ -22,10 +22,10 @@ const router = createBrowserRouter([
     element: <SignUp />,
   },
   {
-    path: '/dashboard',
+    path: '/lobby',
     element: (
       <PrivateRoute>
-        <Dashboard />
+        <Lobby />
       </PrivateRoute>
     ),
   },

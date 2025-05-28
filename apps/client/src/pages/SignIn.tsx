@@ -1,24 +1,25 @@
 import * as React from 'react'
 import Box from '@mui/material/Box'
-import Button from '@mui/material/Button'
-import Checkbox from '@mui/material/Checkbox'
-import CssBaseline from '@mui/material/CssBaseline'
-import FormControlLabel from '@mui/material/FormControlLabel'
-import Divider from '@mui/material/Divider'
-import FormLabel from '@mui/material/FormLabel'
-import FormControl from '@mui/material/FormControl'
-import LinkComponent from '@mui/material/Link'
-import TextField from '@mui/material/TextField'
-import Typography from '@mui/material/Typography'
 import Stack from '@mui/material/Stack'
 import MuiCard from '@mui/material/Card'
+import Button from '@mui/material/Button'
+import Divider from '@mui/material/Divider'
+import Checkbox from '@mui/material/Checkbox'
 import { styled } from '@mui/material/styles'
-import ForgotPassword from './mui/components/ForgotPassword'
-import AppTheme from './mui/components/Apptheme'
-import ColorModeSelect from './mui/components/customization/colorModeSelect'
-import { GoogleIcon, FacebookIcon } from './mui/components/CustomIcons.tsx'
+import LinkComponent from '@mui/material/Link'
+import TextField from '@mui/material/TextField'
+import FormLabel from '@mui/material/FormLabel'
 import { Link, useNavigate } from 'react-router'
-import { AuthContextProvider, UserAuth } from './context/AuthContext.tsx'
+import Typography from '@mui/material/Typography'
+import ErrorBox from '../components/ErrorBox.tsx'
+import FormControl from '@mui/material/FormControl'
+import CssBaseline from '@mui/material/CssBaseline'
+import AppTheme from '../mui/components/Apptheme.tsx'
+import { UserAuth } from '../context/AuthContext.tsx'
+import FormControlLabel from '@mui/material/FormControlLabel'
+import ForgotPassword from '../mui/components/ForgotPassword.tsx'
+import { GoogleIcon, FacebookIcon } from '../mui/components/CustomIcons.tsx'
+import ColorModeSelect from '../mui/components/customization/colorModeSelect.tsx'
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
@@ -68,6 +69,8 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
   const [passwordError, setPasswordError] = React.useState(false)
   const [passwordErrorMessage, setPasswordErrorMessage] = React.useState('')
   const [open, setOpen] = React.useState(false)
+  const [error, setError] = React.useState('')
+  const [showError, setShowError] = React.useState(false)
 
   const { signinUser }: any = UserAuth()
   const navigate = useNavigate()
@@ -102,6 +105,9 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
           success: true,
           message: 'Signup successfull',
         })
+      } else {
+        setError('Authentication failed')
+        setShowError(true)
       }
     } catch (e) {
       console.error(e)
@@ -198,6 +204,11 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
               label="Remember me"
+            />
+            <ErrorBox
+              open={showError}
+              message={error}
+              onClose={() => setShowError(false)}
             />
             <ForgotPassword open={open} handleClose={handleClose} />
             <Button

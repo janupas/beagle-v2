@@ -1,24 +1,25 @@
 import * as React from 'react'
 import Box from '@mui/material/Box'
-import Button from '@mui/material/Button'
-import Checkbox from '@mui/material/Checkbox'
-import CssBaseline from '@mui/material/CssBaseline'
-import Divider from '@mui/material/Divider'
-import FormControlLabel from '@mui/material/FormControlLabel'
-import FormLabel from '@mui/material/FormLabel'
-import FormControl from '@mui/material/FormControl'
-import LinkComponent from '@mui/material/Link'
-import TextField from '@mui/material/TextField'
-import Typography from '@mui/material/Typography'
+import { Link } from 'react-router'
 import Stack from '@mui/material/Stack'
 import MuiCard from '@mui/material/Card'
-import { styled } from '@mui/material/styles'
-import AppTheme from './mui/components/Apptheme'
-import ColorModeSelect from './mui/components/customization/colorModeSelect'
-import { GoogleIcon, FacebookIcon } from './mui/components/CustomIcons'
-import { Link } from 'react-router'
-import { UserAuth } from './context/AuthContext'
+import Button from '@mui/material/Button'
 import { useNavigate } from 'react-router'
+import Divider from '@mui/material/Divider'
+import { styled } from '@mui/material/styles'
+import Checkbox from '@mui/material/Checkbox'
+import ErrorBox from '../components/ErrorBox'
+import LinkComponent from '@mui/material/Link'
+import FormLabel from '@mui/material/FormLabel'
+import TextField from '@mui/material/TextField'
+import Typography from '@mui/material/Typography'
+import AppTheme from '../mui/components/Apptheme'
+import { UserAuth } from '../context/AuthContext'
+import CssBaseline from '@mui/material/CssBaseline'
+import FormControl from '@mui/material/FormControl'
+import FormControlLabel from '@mui/material/FormControlLabel'
+import { GoogleIcon, FacebookIcon } from '../mui/components/CustomIcons'
+import ColorModeSelect from '../mui/components/customization/colorModeSelect'
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
@@ -69,7 +70,8 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
   const [passwordErrorMessage, setPasswordErrorMessage] = React.useState('')
   const [nameError, setNameError] = React.useState(false)
   const [nameErrorMessage, setNameErrorMessage] = React.useState('')
-
+  const [error, setError] = React.useState('')
+  const [showError, setShowError] = React.useState(false)
   const { signupNewUser }: any = UserAuth()
   const navigate = useNavigate()
 
@@ -132,6 +134,9 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
           success: true,
           message: 'Signup successfull',
         })
+      } else {
+        setError('Authentication failed')
+        setShowError(true)
       }
     } catch (e) {
       console.error(e)
@@ -204,6 +209,11 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
             <FormControlLabel
               control={<Checkbox value="allowExtraEmails" color="primary" />}
               label="I want to receive updates via email."
+            />
+            <ErrorBox
+              open={showError}
+              message={error}
+              onClose={() => setShowError(false)}
             />
             <Button
               type="submit"
