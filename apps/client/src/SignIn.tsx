@@ -17,7 +17,8 @@ import ForgotPassword from './mui/components/ForgotPassword'
 import AppTheme from './mui/components/Apptheme'
 import ColorModeSelect from './mui/components/customization/colorModeSelect'
 import { GoogleIcon, FacebookIcon } from './mui/components/CustomIcons.tsx'
-import { Link } from 'react-router'
+import { Link, useNavigate } from 'react-router'
+import { AuthContextProvider, UserAuth } from './context/AuthContext.tsx'
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
@@ -68,6 +69,9 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
   const [passwordErrorMessage, setPasswordErrorMessage] = React.useState('')
   const [open, setOpen] = React.useState(false)
 
+  const { signinUser }: any = UserAuth()
+  const navigate = useNavigate()
+
   const handleClickOpen = () => {
     setOpen(true)
   }
@@ -76,16 +80,32 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
     setOpen(false)
   }
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+
     if (emailError || passwordError) {
-      event.preventDefault()
       return
     }
+
     const data = new FormData(event.currentTarget)
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    })
+
+    try {
+      const res = await signinUser({
+        email: data.get('email'),
+        password: data.get('password'),
+      })
+
+      if (res.success) {
+        // log for success
+        navigate('/')
+        console.log({
+          success: true,
+          message: 'Signup successfull',
+        })
+      }
+    } catch (e) {
+      console.error(e)
+    }
   }
 
   const validateInputs = () => {

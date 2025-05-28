@@ -17,6 +17,8 @@ import AppTheme from './mui/components/Apptheme'
 import ColorModeSelect from './mui/components/customization/colorModeSelect'
 import { GoogleIcon, FacebookIcon } from './mui/components/CustomIcons'
 import { Link } from 'react-router'
+import { UserAuth } from './context/AuthContext'
+import { useNavigate } from 'react-router'
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
@@ -68,6 +70,9 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
   const [nameError, setNameError] = React.useState(false)
   const [nameErrorMessage, setNameErrorMessage] = React.useState('')
 
+  const { signupNewUser }: any = UserAuth()
+  const navigate = useNavigate()
+
   const validateInputs = () => {
     const email = document.getElementById('email') as HTMLInputElement
     const password = document.getElementById('password') as HTMLInputElement
@@ -105,18 +110,32 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
     return isValid
   }
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    if (nameError || emailError || passwordError) {
-      event.preventDefault()
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+
+    if (emailError || nameError || passwordError) {
       return
     }
-    const data = new FormData(event.currentTarget)
-    console.log({
-      name: data.get('name'),
-      lastName: data.get('lastName'),
-      email: data.get('email'),
-      password: data.get('password'),
-    })
+
+    const data: FormData = new FormData(event.currentTarget)
+
+    try {
+      const res = await signupNewUser({
+        email: data.get('email'),
+        password: data.get('password'),
+      })
+
+      if (res.success) {
+        // log for success
+        navigate('/')
+        console.log({
+          success: true,
+          message: 'Signup successfull',
+        })
+      }
+    } catch (e) {
+      console.error(e)
+    }
   }
 
   return (
