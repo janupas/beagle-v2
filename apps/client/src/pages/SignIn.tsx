@@ -225,7 +225,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
               {loading ? (
                 <CircularProgress size={20} color="secondary" />
               ) : (
-                'Sign up'
+                'Sign in'
               )}
             </Button>
             <LinkComponent
