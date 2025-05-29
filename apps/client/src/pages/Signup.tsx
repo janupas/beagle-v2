@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { useState } from 'react'
 import Box from '@mui/material/Box'
 import { Link } from 'react-router'
 import Stack from '@mui/material/Stack'
@@ -12,6 +12,7 @@ import ErrorBox from '../components/ErrorBox'
 import LinkComponent from '@mui/material/Link'
 import FormLabel from '@mui/material/FormLabel'
 import TextField from '@mui/material/TextField'
+import { CircularProgress } from '@mui/material'
 import Typography from '@mui/material/Typography'
 import AppTheme from '../mui/components/Apptheme'
 import { UserAuth } from '../context/AuthContext'
@@ -64,15 +65,16 @@ const SignUpContainer = styled(Stack)(({ theme }) => ({
 }))
 
 export default function SignUp(props: { disableCustomTheme?: boolean }) {
-  const [emailError, setEmailError] = React.useState(false)
-  const [emailErrorMessage, setEmailErrorMessage] = React.useState('')
-  const [passwordError, setPasswordError] = React.useState(false)
-  const [passwordErrorMessage, setPasswordErrorMessage] = React.useState('')
-  const [nameError, setNameError] = React.useState(false)
-  const [nameErrorMessage, setNameErrorMessage] = React.useState('')
-  const [error, setError] = React.useState('')
-  const [showError, setShowError] = React.useState(false)
+  const [emailError, setEmailError] = useState<boolean>(false)
+  const [emailErrorMessage, setEmailErrorMessage] = useState<string>('')
+  const [passwordError, setPasswordError] = useState<boolean>(false)
+  const [passwordErrorMessage, setPasswordErrorMessage] = useState<string>('')
+  const [nameError, setNameError] = useState<boolean>(false)
+  const [nameErrorMessage, setNameErrorMessage] = useState<string>('')
+  const [error, setError] = useState<string>('')
+  const [showError, setShowError] = useState<boolean>(false)
   const { signupNewUser }: any = UserAuth()
+  const [loading, setLoading] = useState<boolean>(false)
   const navigate = useNavigate()
 
   const validateInputs = () => {
@@ -114,6 +116,7 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
+    setLoading(true)
 
     if (emailError || nameError || passwordError) {
       return
@@ -129,12 +132,16 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
 
       if (res.success) {
         // log for success
-        navigate('/')
+        setLoading(false)
+
+        navigate('/lobby')
         console.log({
           success: true,
           message: 'Signup successfull',
         })
       } else {
+        setLoading(false)
+
         setError('Authentication failed')
         setShowError(true)
       }
@@ -221,7 +228,11 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
               variant="contained"
               onClick={validateInputs}
             >
-              Sign up
+              {loading ? (
+                <CircularProgress size={20} color="secondary" />
+              ) : (
+                'Sign up'
+              )}
             </Button>
           </Box>
           <Divider>

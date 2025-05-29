@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { useState } from 'react'
 import Box from '@mui/material/Box'
 import Stack from '@mui/material/Stack'
 import MuiCard from '@mui/material/Card'
@@ -9,6 +9,7 @@ import { styled } from '@mui/material/styles'
 import LinkComponent from '@mui/material/Link'
 import TextField from '@mui/material/TextField'
 import FormLabel from '@mui/material/FormLabel'
+import { CircularProgress } from '@mui/material'
 import { Link, useNavigate } from 'react-router'
 import Typography from '@mui/material/Typography'
 import ErrorBox from '../components/ErrorBox.tsx'
@@ -64,13 +65,14 @@ const SignInContainer = styled(Stack)(({ theme }) => ({
 }))
 
 export default function SignIn(props: { disableCustomTheme?: boolean }) {
-  const [emailError, setEmailError] = React.useState(false)
-  const [emailErrorMessage, setEmailErrorMessage] = React.useState('')
-  const [passwordError, setPasswordError] = React.useState(false)
-  const [passwordErrorMessage, setPasswordErrorMessage] = React.useState('')
-  const [open, setOpen] = React.useState(false)
-  const [error, setError] = React.useState('')
-  const [showError, setShowError] = React.useState(false)
+  const [emailError, setEmailError] = useState<boolean | undefined>(false)
+  const [emailErrorMessage, setEmailErrorMessage] = useState<string>('')
+  const [passwordError, setPasswordError] = useState<boolean>(false)
+  const [passwordErrorMessage, setPasswordErrorMessage] = useState<string>('')
+  const [open, setOpen] = useState<boolean>(false)
+  const [error, setError] = useState<string>('')
+  const [showError, setShowError] = useState<boolean>(false)
+  const [loading, setLoading] = useState<boolean>(false)
 
   const { signinUser }: any = UserAuth()
   const navigate = useNavigate()
@@ -85,6 +87,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
+    setLoading(true)
 
     if (emailError || passwordError) {
       return
@@ -100,12 +103,14 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
 
       if (res.success) {
         // log for success
-        navigate('/')
+        setLoading(false)
+        navigate('/lobby')
         console.log({
           success: true,
           message: 'Signup successfull',
         })
       } else {
+        setLoading(false)
         setError('Authentication failed')
         setShowError(true)
       }
@@ -217,7 +222,11 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
               variant="contained"
               onClick={validateInputs}
             >
-              Sign in
+              {loading ? (
+                <CircularProgress size={20} color="secondary" />
+              ) : (
+                'Sign up'
+              )}
             </Button>
             <LinkComponent
               component="button"
