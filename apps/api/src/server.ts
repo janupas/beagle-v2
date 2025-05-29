@@ -1,4 +1,5 @@
 import express from 'express'
+import { prisma } from './config/prisma.config'
 
 const app = express()
 
