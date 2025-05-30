@@ -21,6 +21,7 @@ import FormControl from '@mui/material/FormControl'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import { GoogleIcon, FacebookIcon } from '../mui/components/CustomIcons'
 import ColorModeSelect from '../mui/components/customization/colorModeSelect'
+import axios from 'axios'
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
@@ -134,11 +135,24 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
         // log for success
         setLoading(false)
 
-        navigate('/lobby')
-        console.log({
-          success: true,
-          message: 'Signup successfull',
-        })
+        // Create a new user in the server external database as a copy
+        axios
+          .post('http://localhost:5000/api/users', {
+            supabase_uid: res.data.user.id,
+            display_name: data.get('name'),
+          })
+          .then(() => {
+            navigate('/lobby')
+            console.log({
+              success: true,
+              message: 'Signup successfull',
+            })
+          })
+          .catch(() => {
+            setError('Authentication failed')
+            setShowError(true)
+            return
+          })
       } else {
         setLoading(false)
 
