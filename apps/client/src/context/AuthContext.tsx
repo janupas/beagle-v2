@@ -21,7 +21,7 @@ export const AuthContextProvider = ({
 }: {
   children: ReactElement
 }) => {
-  const [session, setSession] = useState<any>('hello')
+  const [session, setSession] = useState<any>()
 
   const signupNewUser = async ({
     email,

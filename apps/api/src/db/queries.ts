@@ -61,3 +61,28 @@ export const getAllUsersService = async (): Promise<boolean | Array<UserI>> => {
     return false
   }
 }
+
+/**
+ * Get a single user that matches the id
+ */
+export const getSingleUserService = async (
+  supabase_uid: string
+): Promise<boolean | UserI> => {
+  try {
+    const user: UserI | null = await prisma.user.findFirst({
+      where: {
+        supabase_uid: supabase_uid,
+      },
+    })
+
+    if (user) {
+      logger.info('User returned: ' + JSON.stringify(user))
+      return user
+    }
+
+    return false
+  } catch (error) {
+    logger.error(error)
+    return false
+  }
+}

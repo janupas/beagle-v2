@@ -142,7 +142,7 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
             display_name: data.get('name'),
           })
           .then(() => {
-            navigate('/lobby')
+            navigate('/profile')
             console.log({
               success: true,
               message: 'Signup successfull',

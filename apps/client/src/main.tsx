@@ -7,6 +7,7 @@ import { createRoot } from 'react-dom/client'
 import PrivateRoute from './components/PrivateRoute.tsx'
 import { AuthContextProvider } from './context/AuthContext.tsx'
 import { createBrowserRouter, RouterProvider } from 'react-router'
+import ProfilePage from './pages/Profile.tsx'
 
 const router = createBrowserRouter([
   {
@@ -26,6 +27,14 @@ const router = createBrowserRouter([
     element: (
       <PrivateRoute>
         <Lobby />
+      </PrivateRoute>
+    ),
+  },
+  {
+    path: '/profile',
+    element: (
+      <PrivateRoute>
+        <ProfilePage />
       </PrivateRoute>
     ),
   },

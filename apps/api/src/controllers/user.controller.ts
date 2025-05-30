@@ -1,4 +1,8 @@
-import { createNewUserService, getAllUsersService } from '../db/queries'
+import {
+  createNewUserService,
+  getAllUsersService,
+  getSingleUserService,
+} from '../db/queries'
 import { Request, Response } from 'express'
 
 /**
@@ -49,7 +53,36 @@ const createNewUser = async (req: Request, res: Response) => {
   }
 }
 
+/**
+ * /api/users/:id /GET Endpoint
+ */
+const getSingleUser = async (req: Request, res: Response) => {
+  const { id } = req.params
+
+  try {
+    const user = await getSingleUserService(id)
+
+    if (user) {
+      res.json({
+        success: true,
+        user,
+      })
+    } else {
+      res.json({
+        success: false,
+        message: 'User not found',
+      })
+    }
+  } catch (error) {
+    res.json({
+      success: false,
+      message: 'An error occurred',
+    })
+  }
+}
+
 export default {
   getAllUsers,
   createNewUser,
+  getSingleUser,
 }

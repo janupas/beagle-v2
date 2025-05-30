@@ -104,7 +104,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
       if (res.success) {
         // log for success
         setLoading(false)
-        navigate('/lobby')
+        navigate('/profile')
         console.log({
           success: true,
           message: 'Signup successfull',
