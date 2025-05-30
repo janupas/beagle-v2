@@ -8,6 +8,7 @@ import PrivateRoute from './components/PrivateRoute.tsx'
 import { AuthContextProvider } from './context/AuthContext.tsx'
 import { createBrowserRouter, RouterProvider } from 'react-router'
 import ProfilePage from './pages/Profile.tsx'
+import NotForLoggedInUsers from './components/NotForLoggedUsers.tsx'
 
 const router = createBrowserRouter([
   {
@@ -16,11 +17,19 @@ const router = createBrowserRouter([
   },
   {
     path: '/signin',
-    element: <SignIn />,
+    element: (
+      <NotForLoggedInUsers>
+        <SignIn />
+      </NotForLoggedInUsers>
+    ),
   },
   {
     path: '/signup',
-    element: <SignUp />,
+    element: (
+      <NotForLoggedInUsers>
+        <SignUp />
+      </NotForLoggedInUsers>
+    ),
   },
   {
     path: '/lobby',
