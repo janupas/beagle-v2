@@ -1,6 +1,5 @@
 import { logger } from '../config/logger'
 import { prisma } from '../config/prisma.config'
-import { Prisma } from '../generated/prisma'
 
 export interface NewUserI {
   uid: string
@@ -33,6 +32,7 @@ export const createNewUserService = async ({
     })
 
     if (createdUser) {
+      logger.info('A new user created: ' + JSON.stringify(createdUser))
       return true
     }
 
@@ -51,6 +51,7 @@ export const getAllUsersService = async (): Promise<boolean | Array<UserI>> => {
     const users: Array<UserI> = await prisma.user.findMany()
 
     if (users) {
+      logger.info('Users array returned successfully')
       return users
     }
 
