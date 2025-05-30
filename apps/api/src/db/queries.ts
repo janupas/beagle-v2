@@ -1,3 +1,4 @@
+import { logger } from '../config/logger'
 import { prisma } from '../config/prisma.config'
 import { Prisma } from '../generated/prisma'
 
@@ -37,7 +38,7 @@ export const createNewUserService = async ({
 
     return false
   } catch (error) {
-    console.log(error)
+    logger.error(error)
     return false
   }
 }
@@ -55,7 +56,7 @@ export const getAllUsersService = async (): Promise<boolean | Array<UserI>> => {
 
     return false
   } catch (error) {
-    console.log(error)
+    logger.error(error)
     return false
   }
 }

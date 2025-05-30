@@ -42,11 +42,9 @@ const createNewUser = async (req: Request, res: Response) => {
       })
     }
   } catch (error) {
-    console.log(error)
-
     res.json({
       success: false,
-      error,
+      message: 'An error occurred',
     })
   }
 }
