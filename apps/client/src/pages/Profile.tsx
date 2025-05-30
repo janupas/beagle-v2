@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { useNavigate } from 'react-router'
 import {
   Box,
@@ -7,7 +7,11 @@ import {
   Avatar,
   CircularProgress,
   IconButton,
-  Divider,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
 } from '@mui/material'
 import MuiCard from '@mui/material/Card'
 import { styled } from '@mui/material/styles'
@@ -16,7 +20,9 @@ import LogoutIcon from '@mui/icons-material/Logout'
 import CssBaseline from '@mui/material/CssBaseline'
 import AppTheme from '../mui/components/Apptheme'
 import { UserAuth } from '../context/AuthContext'
+import EditIcon from '@mui/icons-material/Edit'
 import axios from 'axios'
+import { supabase } from '../supabaseClient'
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
@@ -52,9 +58,14 @@ const ProfileContainer = styled(Stack)(({ theme }) => ({
 export default function ProfilePage(props: { disableCustomTheme?: boolean }) {
   const [user, setUser] = useState<any>()
   const [loading, setLoading] = useState<boolean>(false)
+  const [previewURL, setPreviewURL] = useState<string | null>(null)
+  const [selectedFile, setSelectedFile] = useState<File | null>(null)
+  const [dialogOpen, setDialogOpen] = useState(false)
   const [signoutLoading, setSignoutLoading] = useState<boolean>(false)
+  const [avatarLoading, setAvatarLoading] = useState<boolean>(false)
   const { session, signOut }: any = UserAuth()
   const navigate = useNavigate()
+  const fileInputRef = useRef<HTMLInputElement | null>(null)
 
   useEffect(() => {
     setLoading(true)
@@ -79,6 +90,79 @@ export default function ProfilePage(props: { disableCustomTheme?: boolean }) {
       navigate('/signin')
     } catch (error) {
       console.error('Error signing out:', error)
+    }
+  }
+
+  const handleAvatarClick = () => {
+    fileInputRef.current?.click()
+  }
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    const objectURL = URL.createObjectURL(file)
+    setPreviewURL(objectURL)
+    setSelectedFile(file)
+    setDialogOpen(true)
+  }
+
+  const handleConfirmUpload = async () => {
+    if (!selectedFile) return
+
+    setAvatarLoading(true)
+
+    const fileExt = selectedFile.name.split('.').pop()
+    const fileName = `${session.user.id}-${Date.now()}.${fileExt}`
+    const filePath = `avatars/${fileName}`
+
+    const { error: uploadError } = await supabase.storage
+      .from('avatars')
+      .upload(filePath, selectedFile, {
+        cacheControl: '3600',
+        upsert: true,
+      })
+
+    if (uploadError) {
+      console.error('Upload failed:', uploadError)
+      return
+    }
+
+    const { data: publicUrlData } = supabase.storage
+      .from('avatars')
+      .getPublicUrl(filePath)
+
+    const publicUrl = publicUrlData?.publicUrl
+    if (!publicUrl) {
+      console.error('Failed to get public URL')
+      return
+    }
+
+    try {
+      await axios.patch(`http://localhost:5000/api/users/${session.user.id}`, {
+        url: publicUrl,
+      })
+
+      setUser((prev: any) => ({
+        ...prev,
+        photoURL: publicUrl,
+      }))
+
+      setAvatarLoading(false)
+      window.location.reload()
+    } catch (err) {
+      console.error('Failed to update photoURL in custom DB:', err)
+    }
+  }
+
+  const handleCancelUpload = () => {
+    setDialogOpen(false)
+    setPreviewURL(null)
+    setSelectedFile(null)
+
+    // Making sure the preview comes in if you cancel it once
+    if (fileInputRef.current) {
+      fileInputRef.current.value = ''
     }
   }
 
@@ -112,19 +196,48 @@ export default function ProfilePage(props: { disableCustomTheme?: boolean }) {
               </IconButton>
             </Stack>
 
-            {/* Avatar */}
-            <Box sx={{ display: 'flex', justifyContent: 'center', mt: 1 }}>
+            {/* Avatar with Upload */}
+            <Box
+              sx={{
+                position: 'relative',
+                display: 'flex',
+                justifyContent: 'center',
+                mt: 1,
+              }}
+            >
               <Avatar
-                src={user?.photoURL || ''}
+                src={user?.avatar || ''}
                 sx={{
                   width: 96,
                   height: 96,
                   fontSize: 32,
                   bgcolor: 'primary.main',
+                  cursor: 'pointer',
                 }}
+                onClick={handleAvatarClick}
               >
-                {user?.displayName?.charAt(0) || 'G'}
+                {user?.displayName?.charAt(0) || 'U'}
               </Avatar>
+              <IconButton
+                sx={{
+                  position: 'absolute',
+                  bottom: 0,
+                  right: 'calc(50% - 48px)',
+                  bgcolor: 'background.paper',
+                  boxShadow: 2,
+                }}
+                size="small"
+                onClick={handleAvatarClick}
+              >
+                <EditIcon fontSize="small" />
+              </IconButton>
+              <input
+                type="file"
+                ref={fileInputRef}
+                style={{ display: 'none' }}
+                accept="image/*"
+                onChange={handleFileChange}
+              />
             </Box>
 
             {/* User Info */}
@@ -138,6 +251,28 @@ export default function ProfilePage(props: { disableCustomTheme?: boolean }) {
             </Stack>
           </Card>
         )}
+
+        {/* Image Preview Dialog */}
+        <Dialog open={dialogOpen} onClose={handleCancelUpload}>
+          <DialogTitle>Preview Image</DialogTitle>
+          <DialogContent>
+            {previewURL ? (
+              <img
+                src={previewURL}
+                alt="Preview"
+                style={{ width: '100%', borderRadius: 8 }}
+              />
+            ) : (
+              <Typography>No image selected</Typography>
+            )}
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCancelUpload}>Cancel</Button>
+            <Button onClick={handleConfirmUpload}>
+              {avatarLoading ? <CircularProgress size={20} /> : 'Upload'}
+            </Button>
+          </DialogActions>
+        </Dialog>
       </ProfileContainer>
     </AppTheme>
   )

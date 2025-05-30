@@ -28,6 +28,7 @@ export const createNewUserService = async ({
       data: {
         supabase_uid: uid,
         display_name: name,
+        avatar: '',
       },
     })
 
@@ -83,6 +84,29 @@ export const getSingleUserService = async (
     return false
   } catch (error) {
     logger.error(error)
+    return false
+  }
+}
+
+export const updateUserAvatarService = async (id: string, url: string) => {
+  try {
+    const updatedUser = await prisma.user.update({
+      where: {
+        supabase_uid: id,
+      },
+      data: {
+        avatar: url,
+      },
+    })
+
+    if (updatedUser) {
+      logger.info('User updated: ' + JSON.stringify(updatedUser))
+      return updatedUser
+    }
+
+    return false
+  } catch (err) {
+    logger.error(err)
     return false
   }
 }

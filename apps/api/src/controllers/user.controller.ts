@@ -2,6 +2,7 @@ import {
   createNewUserService,
   getAllUsersService,
   getSingleUserService,
+  updateUserAvatarService,
 } from '../db/queries'
 import { Request, Response } from 'express'
 
@@ -81,8 +82,38 @@ const getSingleUser = async (req: Request, res: Response) => {
   }
 }
 
+/**
+ * /api/users/:id /PATCH Endpoint
+ */
+const updateUserAvatar = async (req: Request, res: Response) => {
+  const { id } = req.params
+  const { url } = req.body
+
+  try {
+    const updatedUser = await updateUserAvatarService(id, url)
+
+    if (updatedUser) {
+      res.json({
+        success: true,
+        updatedUser,
+      })
+    } else {
+      res.json({
+        success: false,
+        message: 'User not found',
+      })
+    }
+  } catch (error) {
+    res.json({
+      success: false,
+      message: 'An error occurred',
+    })
+  }
+}
+
 export default {
   getAllUsers,
   createNewUser,
   getSingleUser,
+  updateUserAvatar,
 }

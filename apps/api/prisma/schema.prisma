@@ -16,8 +16,9 @@ datasource db {
 
 model User {
   id           Int      @id @default(autoincrement())
-  supabase_uid String   @db.VarChar(50)
+  supabase_uid String   @unique @db.VarChar(50)
   display_name String   @db.VarChar(150)
+  avatar       String   @db.LongText
   created_at   DateTime @default(now())
 
   @@map("users")
