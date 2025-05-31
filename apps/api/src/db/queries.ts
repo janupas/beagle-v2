@@ -141,3 +141,18 @@ export const createNewLobbyService = async ({
     return false
   }
 }
+
+export const getAllLobbiesService = async () => {
+  try {
+    const lobbies = await prisma.lobby.findMany()
+
+    if (lobbies) {
+      return lobbies
+    }
+
+    return false
+  } catch (err) {
+    logger.error(err)
+    return false
+  }
+}

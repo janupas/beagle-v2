@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { createNewLobbyService } from '../db/queries'
+import { createNewLobbyService, getAllLobbiesService } from '../db/queries'
 
 const CreateNewLobby = async (req: Request, res: Response) => {
   const { name, id } = req.body
@@ -24,6 +24,28 @@ const CreateNewLobby = async (req: Request, res: Response) => {
   }
 }
 
+const getLobbies = async (req: Request, res: Response) => {
+  try {
+    const lobbies = await getAllLobbiesService()
+
+    if (lobbies) {
+      res.json({
+        success: true,
+        data: lobbies,
+      })
+    } else {
+      res.json({
+        success: false,
+      })
+    }
+  } catch (err) {
+    res.json({
+      success: false,
+    })
+  }
+}
+
 export default {
   CreateNewLobby,
+  getLobbies,
 }
