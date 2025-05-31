@@ -1,6 +1,5 @@
 import App from './pages/App.tsx'
 import { StrictMode } from 'react'
-import Lobby from './pages/Lobby.tsx'
 import SignIn from './pages/SignIn.tsx'
 import SignUp from './pages/Signup.tsx'
 import { createRoot } from 'react-dom/client'
@@ -13,7 +12,11 @@ import NotForLoggedInUsers from './components/NotForLoggedUsers.tsx'
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <App />,
+    element: (
+      <PrivateRoute>
+        <App />
+      </PrivateRoute>
+    ),
   },
   {
     path: '/signin',
@@ -29,14 +32,6 @@ const router = createBrowserRouter([
       <NotForLoggedInUsers>
         <SignUp />
       </NotForLoggedInUsers>
-    ),
-  },
-  {
-    path: '/lobby',
-    element: (
-      <PrivateRoute>
-        <Lobby />
-      </PrivateRoute>
     ),
   },
   {
