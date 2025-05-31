@@ -1,6 +1,7 @@
 import express from 'express'
 import { Request, Response } from 'express'
 import userRoutes from './routes/user.route'
+import lobbyRoutes from './routes/lobby.route'
 import cors from 'cors'
 
 const app = express()
@@ -21,5 +22,10 @@ app.get('/', (req: Request, res: Response) => {
  * /api/users Endpoint
  */
 app.use('/api/', userRoutes)
+
+/**
+ * /api/lobby Endpoint
+ */
+app.use('/api/', lobbyRoutes)
 
 export default app

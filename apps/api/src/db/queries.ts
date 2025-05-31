@@ -110,3 +110,34 @@ export const updateUserAvatarService = async (id: string, url: string) => {
     return false
   }
 }
+
+export const createNewLobbyService = async ({
+  name,
+  adminId,
+}: {
+  name: string
+  adminId: string
+}) => {
+  try {
+    const createdLobby = await prisma.lobby.create({
+      data: {
+        name: name,
+        admin: {
+          connect: {
+            supabase_uid: adminId,
+          },
+        },
+      },
+    })
+
+    if (createdLobby) {
+      logger.info('lobby created: ' + JSON.stringify(createdLobby))
+      return createdLobby
+    }
+
+    return false
+  } catch (err) {
+    logger.error(err)
+    return false
+  }
+}
