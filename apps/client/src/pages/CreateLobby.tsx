@@ -6,12 +6,16 @@ import {
   Card as MuiCard,
   CssBaseline,
   IconButton,
+  CircularProgress,
 } from '@mui/material'
 import { styled } from '@mui/material/styles'
 import { useState } from 'react'
 import { useNavigate } from 'react-router'
 import HomeIcon from '@mui/icons-material/Home'
 import AppTheme from '../mui/components/Apptheme'
+import axios from 'axios'
+import { UserAuth } from '../context/AuthContext'
+import ErrorBox from '../components/ErrorBox'
 
 const Card = styled(MuiCard)(({ theme }) => ({
   padding: theme.spacing(4),
@@ -47,8 +51,11 @@ export default function CreateLobbyPage(props: {
   disableCustomTheme?: boolean
 }) {
   const [lobbyName, setLobbyName] = useState('')
+  const { session }: any = UserAuth()
   const [error, setError] = useState(false)
   const [nameError, setNameError] = useState('')
+  const [loading, setLoading] = useState<boolean>(false)
+  const [loadError, setLoadError] = useState<boolean>(false)
   const navigate = useNavigate()
 
   const handleCreate = () => {
@@ -60,8 +67,29 @@ export default function CreateLobbyPage(props: {
       setError(false)
       setNameError('')
     }
-    // Handle lobby creation logic here, e.g. API call or state update
-    alert(`Creating lobby: ${lobbyName}`)
+
+    setLoading(true)
+
+    // Hitting the POST endpoint on the server
+    axios
+      .post('http://localhost:5000/api/lobby', {
+        name: lobbyName,
+        id: session.user.id,
+      })
+      .then((data) => {
+        if (data.data.lobby) {
+          navigate('/')
+          setLoading(false)
+        } else {
+          setLoadError(true)
+          setLoading(false)
+        }
+      })
+      .catch((err) => {
+        console.log(err)
+        setLoadError(true)
+        setLoading(false)
+      })
   }
 
   return (
@@ -102,13 +130,18 @@ export default function CreateLobbyPage(props: {
             helperText={nameError}
             color="error"
           />
+          <ErrorBox
+            open={loadError}
+            message="An error occurred"
+            onClose={() => setLoadError(false)}
+          />
           <Button
             variant="contained"
             size="large"
             fullWidth
             onClick={handleCreate}
           >
-            Create New Lobby
+            {loading ? <CircularProgress size={20} /> : 'Create new lobby'}
           </Button>
         </Card>
       </CreateLobbyContainer>

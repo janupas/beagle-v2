@@ -14,7 +14,8 @@ import {
 import { styled } from '@mui/material/styles'
 import AppTheme from '../mui/components/Apptheme'
 import { useNavigate } from 'react-router'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import axios from 'axios'
 
 const Card = styled(MuiCard)(({ theme }) => ({
   padding: theme.spacing(4),
@@ -58,12 +59,28 @@ const dummyLobbies = [
 export default function App(props: { disableCustomTheme?: boolean }) {
   const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
+  const [lobbies, setLobbies] = useState<
+    Array<{ id: number; name: string; created_at: string; adminId: string }>
+  >([])
+  const [lobbiesLoading, setLobbiesLoading] = useState<boolean>(true)
 
   const handleCreate = () => {
     setLoading(true)
     navigate('/create')
     setLoading(false)
   }
+
+  useEffect(() => {
+    axios
+      .get('http://localhost:5000/api/lobby')
+      .then((res) => {
+        if (res.data.data) {
+          setLobbies(res.data.data)
+          setLobbiesLoading(false)
+        }
+      })
+      .catch((err) => console.log(err))
+  }, [])
 
   return (
     <AppTheme {...props}>
@@ -98,29 +115,39 @@ export default function App(props: { disableCustomTheme?: boolean }) {
                 borderColor: 'divider',
               }}
             >
-              <List disablePadding>
-                {dummyLobbies.map((lobby, index) => (
-                  <Box key={lobby.id}>
-                    <ListItem
-                      sx={{
-                        cursor: 'pointer',
-                        borderRadius: 0,
-                        px: 2,
-                        py: 1.5,
-                        '&:hover': {
-                          backgroundColor: 'action.hover',
-                        },
-                      }}
-                    >
-                      <ListItemText
-                        primary={lobby.name}
-                        secondary={`Lobby ID: ${lobby.id}`}
-                      />
-                    </ListItem>
-                    {index < dummyLobbies.length - 1 && <Divider />}
+              {!lobbiesLoading ? (
+                <>
+                  <List disablePadding>
+                    {lobbies.map((lobby, index) => (
+                      <Box key={lobby.id}>
+                        <ListItem
+                          sx={{
+                            cursor: 'pointer',
+                            borderRadius: 0,
+                            px: 2,
+                            py: 1.5,
+                            '&:hover': {
+                              backgroundColor: 'action.hover',
+                            },
+                          }}
+                        >
+                          <ListItemText
+                            primary={lobby.name}
+                            secondary={`Lobby ID: ${lobby.id}`}
+                          />
+                        </ListItem>
+                        {index < dummyLobbies.length && <Divider />}
+                      </Box>
+                    ))}
+                  </List>
+                </>
+              ) : (
+                <Box display="flex" justifyContent="center" alignItems="center">
+                  <Box p={4}>
+                    <CircularProgress size={30} />
                   </Box>
-                ))}
-              </List>
+                </Box>
+              )}
             </Box>
           </Box>
         </Card>
