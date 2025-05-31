@@ -59,10 +59,10 @@ export default function App(props: { disableCustomTheme?: boolean }) {
       <LobbyContainer>
         <Card>
           <Typography variant="h4" textAlign="center">
-            Game Lobby
+            Select a lobby
           </Typography>
           <Typography color="text.secondary" textAlign="center">
-            Create or join a game room to get started.
+            Select or create a lobby to get started.
           </Typography>
           <Button variant="contained" size="large" fullWidth>
             Create New Lobby
@@ -86,6 +86,7 @@ export default function App(props: { disableCustomTheme?: boolean }) {
                   <Box key={lobby.id}>
                     <ListItem
                       sx={{
+                        cursor: 'pointer',
                         borderRadius: 0,
                         px: 2,
                         py: 1.5,
