@@ -9,9 +9,12 @@ import {
   ListItem,
   ListItemText,
   Divider,
+  CircularProgress,
 } from '@mui/material'
 import { styled } from '@mui/material/styles'
 import AppTheme from '../mui/components/Apptheme'
+import { useNavigate } from 'react-router'
+import { useState } from 'react'
 
 const Card = styled(MuiCard)(({ theme }) => ({
   padding: theme.spacing(4),
@@ -53,6 +56,15 @@ const dummyLobbies = [
 ]
 
 export default function App(props: { disableCustomTheme?: boolean }) {
+  const navigate = useNavigate()
+  const [loading, setLoading] = useState(false)
+
+  const handleCreate = () => {
+    setLoading(true)
+    navigate('/create')
+    setLoading(false)
+  }
+
   return (
     <AppTheme {...props}>
       <CssBaseline enableColorScheme />
@@ -64,8 +76,13 @@ export default function App(props: { disableCustomTheme?: boolean }) {
           <Typography color="text.secondary" textAlign="center">
             Select or create a lobby to get started.
           </Typography>
-          <Button variant="contained" size="large" fullWidth>
-            Create New Lobby
+          <Button
+            variant="contained"
+            size="large"
+            fullWidth
+            onClick={handleCreate}
+          >
+            {loading ? <CircularProgress size={20} /> : 'Create new lobby'}
           </Button>
 
           <Box sx={{ width: '100%' }}>

@@ -8,6 +8,7 @@ import { AuthContextProvider } from './context/AuthContext.tsx'
 import { createBrowserRouter, RouterProvider } from 'react-router'
 import ProfilePage from './pages/Profile.tsx'
 import NotForLoggedInUsers from './components/NotForLoggedUsers.tsx'
+import CreateLobbyPage from './pages/CreateLobby.tsx'
 
 const router = createBrowserRouter([
   {
@@ -15,6 +16,14 @@ const router = createBrowserRouter([
     element: (
       <PrivateRoute>
         <App />
+      </PrivateRoute>
+    ),
+  },
+  {
+    path: '/create',
+    element: (
+      <PrivateRoute>
+        <CreateLobbyPage />
       </PrivateRoute>
     ),
   },
