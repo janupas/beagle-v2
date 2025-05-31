@@ -139,17 +139,24 @@ export default function ProfilePage(props: { disableCustomTheme?: boolean }) {
     }
 
     try {
-      await axios.patch(`http://localhost:5000/api/users/${session.user.id}`, {
-        url: publicUrl,
-      })
+      const res = await axios.patch(
+        `http://localhost:5000/api/users/${session.user.id}`,
+        {
+          url: publicUrl,
+        }
+      )
 
-      setUser((prev: any) => ({
-        ...prev,
-        photoURL: publicUrl,
-      }))
+      if (res.data.success) {
+        setUser((prev: any) => ({
+          ...prev,
+          photoURL: publicUrl,
+        }))
 
-      setAvatarLoading(false)
-      window.location.reload()
+        setAvatarLoading(false)
+        window.location.reload()
+      } else {
+        console.log('Some error occurred')
+      }
     } catch (err) {
       console.error('Failed to update photoURL in custom DB:', err)
     }

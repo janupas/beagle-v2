@@ -6,4 +6,6 @@
 
 ### [done] Protected routes
 
-### [] Profile page
+### [done] Profile page
+
+### [done] Avatar upload
