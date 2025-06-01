@@ -117,29 +117,45 @@ export default function App(props: { disableCustomTheme?: boolean }) {
             >
               {!lobbiesLoading ? (
                 <>
-                  <List disablePadding>
-                    {lobbies.map((lobby, index) => (
-                      <Box key={lobby.id}>
-                        <ListItem
-                          sx={{
-                            cursor: 'pointer',
-                            borderRadius: 0,
-                            px: 2,
-                            py: 1.5,
-                            '&:hover': {
-                              backgroundColor: 'action.hover',
-                            },
-                          }}
-                        >
-                          <ListItemText
-                            primary={lobby.name}
-                            secondary={`Lobby ID: ${lobby.id}`}
-                          />
-                        </ListItem>
-                        {index < dummyLobbies.length && <Divider />}
+                  {lobbies.length === 0 ? (
+                    <>
+                      <Box
+                        display="flex"
+                        justifyContent="center"
+                        alignItems="center"
+                      >
+                        <Box p={4}>
+                          <Typography variant="caption">
+                            No lobbies created. Create one.
+                          </Typography>
+                        </Box>
                       </Box>
-                    ))}
-                  </List>
+                    </>
+                  ) : (
+                    <List disablePadding>
+                      {lobbies.map((lobby, index) => (
+                        <Box key={lobby.id}>
+                          <ListItem
+                            sx={{
+                              cursor: 'pointer',
+                              borderRadius: 0,
+                              px: 2,
+                              py: 1.5,
+                              '&:hover': {
+                                backgroundColor: 'action.hover',
+                              },
+                            }}
+                          >
+                            <ListItemText
+                              primary={lobby.name}
+                              secondary={`Lobby ID: ${lobby.id}`}
+                            />
+                          </ListItem>
+                          {index < dummyLobbies.length && <Divider />}
+                        </Box>
+                      ))}
+                    </List>
+                  )}
                 </>
               ) : (
                 <Box display="flex" justifyContent="center" alignItems="center">
