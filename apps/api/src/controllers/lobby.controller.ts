@@ -1,5 +1,9 @@
 import { Request, Response } from 'express'
-import { createNewLobbyService, getAllLobbiesService } from '../db/queries'
+import {
+  createNewLobbyService,
+  getAllLobbiesService,
+  getLobbyInformationService,
+} from '../db/queries'
 
 const CreateNewLobby = async (req: Request, res: Response) => {
   const { name, id } = req.body
@@ -45,7 +49,40 @@ const getLobbies = async (req: Request, res: Response) => {
   }
 }
 
+const getSingleLobby = async (req: Request, res: Response) => {
+  const { id } = req.params
+
+  if (id) {
+    const parsedId = parseInt(id)
+
+    try {
+      const lobby = await getLobbyInformationService(parsedId)
+
+      if (lobby) {
+        res.json({
+          success: true,
+          lobby,
+        })
+      } else {
+        res.json({
+          success: false,
+        })
+      }
+    } catch (err) {
+      res.json({
+        success: false,
+      })
+    }
+  } else {
+    res.json({
+      success: false,
+      message: 'No query params found',
+    })
+  }
+}
+
 export default {
   CreateNewLobby,
   getLobbies,
+  getSingleLobby,
 }

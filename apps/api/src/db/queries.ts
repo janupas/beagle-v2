@@ -156,3 +156,23 @@ export const getAllLobbiesService = async () => {
     return false
   }
 }
+
+export const getLobbyInformationService = async (id: number) => {
+  try {
+    const lobby = await prisma.lobby.findFirst({
+      where: {
+        id: id,
+      },
+    })
+
+    if (lobby) {
+      logger.info('Lobby info: ' + JSON.stringify(lobby))
+      return lobby
+    }
+
+    return false
+  } catch (err) {
+    logger.error(err)
+    return false
+  }
+}
