@@ -7,6 +7,7 @@ import {
   IconButton,
   CssBaseline,
   Paper,
+  CircularProgress,
 } from '@mui/material'
 import SendIcon from '@mui/icons-material/Send'
 import { styled } from '@mui/material/styles'
@@ -105,6 +106,7 @@ export default function ChatPage(props: { disableCustomTheme?: boolean }) {
   const navigate = useNavigate()
   const location = useLocation()
   const { id } = useParams()
+  const [loading, setLoading] = useState(true)
 
   const handleSend = (e: React.FormEvent) => {
     e.preventDefault()
@@ -119,9 +121,13 @@ export default function ChatPage(props: { disableCustomTheme?: boolean }) {
       .then((res) => {
         if (res.data.lobby) {
           setLobbyData(res.data.lobby)
+          setLoading(false)
         }
       })
-      .catch((err) => console.log(err))
+      .catch((err) => {
+        console.log(err)
+        setLoading(false)
+      })
   }, [])
 
   useEffect(() => {
@@ -137,51 +143,80 @@ export default function ChatPage(props: { disableCustomTheme?: boolean }) {
   return (
     <AppTheme {...props}>
       <CssBaseline enableColorScheme />
-      <ChatContainer>
-        <ChatCard>
-          {/* Group Title */}
-          <Stack
-            direction="row"
-            justifyContent="space-between"
-            alignItems="center"
-            mb={1}
-          >
-            <Typography variant="h5" fontWeight="bold">
-              {lobbyData?.name || 'Test chat page'}
-            </Typography>
-            <IconButton
-              onClick={() => navigate('/')}
-              aria-label="Go to homepage"
-              color="primary"
-            >
-              <HomeIcon />
-            </IconButton>
-          </Stack>
 
-          {/* Chat Box */}
-          <ChatBox>
-            {messages.map((msg, idx) => (
-              <ChatBubble key={idx}>{msg}</ChatBubble>
-            ))}
-            <div ref={chatEndRef} />
-          </ChatBox>
+      {loading ? (
+        <Box display="flex" justifyContent="center" alignItems="center">
+          <Box p={4}>
+            <CircularProgress size={30} />
+          </Box>
+        </Box>
+      ) : (
+        <>
+          {lobbyData ? (
+            <>
+              <ChatContainer>
+                <ChatCard>
+                  {/* Group Title */}
+                  <Stack
+                    direction="row"
+                    justifyContent="space-between"
+                    alignItems="center"
+                    mb={1}
+                  >
+                    <Typography variant="h5" fontWeight="bold">
+                      {lobbyData?.name || 'Test chat page'}
+                    </Typography>
+                    <IconButton
+                      onClick={() => navigate('/')}
+                      aria-label="Go to homepage"
+                      color="primary"
+                    >
+                      <HomeIcon />
+                    </IconButton>
+                  </Stack>
 
-          {/* Input Section */}
-          <InputContainer onSubmit={handleSend}>
-            <TextField
-              fullWidth
-              placeholder="Type your message…"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              size="small"
-              sx={{ borderRadius: 2 }}
-            />
-            <IconButton type="submit" color="primary" sx={{ flexShrink: 0 }}>
-              <SendIcon />
-            </IconButton>
-          </InputContainer>
-        </ChatCard>
-      </ChatContainer>
+                  {/* Chat Box */}
+                  <ChatBox>
+                    {messages.map((msg, idx) => (
+                      <ChatBubble key={idx}>{msg}</ChatBubble>
+                    ))}
+                    <div ref={chatEndRef} />
+                  </ChatBox>
+
+                  {/* Input Section */}
+                  <InputContainer onSubmit={handleSend}>
+                    <TextField
+                      fullWidth
+                      placeholder="Type your message…"
+                      value={input}
+                      onChange={(e) => setInput(e.target.value)}
+                      size="small"
+                      sx={{ borderRadius: 2 }}
+                    />
+                    <IconButton
+                      type="submit"
+                      color="primary"
+                      sx={{ flexShrink: 0 }}
+                    >
+                      <SendIcon />
+                    </IconButton>
+                  </InputContainer>
+                </ChatCard>
+              </ChatContainer>
+            </>
+          ) : (
+            <>
+              <Box display="flex" justifyContent="center" alignItems="center">
+                <Box p={4}>
+                  <Typography variant="caption">
+                    Sorry lobby cannot be found...
+                  </Typography>
+                </Box>
+              </Box>
+            </>
+          )}
+        </>
+      )}
     </AppTheme>
   )
 }
