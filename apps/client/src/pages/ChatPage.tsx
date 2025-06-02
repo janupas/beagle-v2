@@ -11,8 +11,9 @@ import {
 import SendIcon from '@mui/icons-material/Send'
 import { styled } from '@mui/material/styles'
 import AppTheme from '../mui/components/Apptheme'
-import { useLocation, useNavigate } from 'react-router'
+import { useLocation, useNavigate, useParams } from 'react-router'
 import HomeIcon from '@mui/icons-material/Home'
+import axios from 'axios'
 
 const ChatContainer = styled(Stack)(({ theme }) => ({
   minHeight: '100dvh',
@@ -95,11 +96,15 @@ export default function ChatPage(props: { disableCustomTheme?: boolean }) {
   ])
   const [input, setInput] = useState('')
   const chatEndRef = useRef<HTMLDivElement | null>(null)
-  const [lobbyName, setLobbyName] = useState<string | null>(
-    'Example lobby name'
-  )
+  const [lobbyData, setLobbyData] = useState<{
+    id: number
+    name: string
+    created_at: string
+    admin_id: string
+  }>()
   const navigate = useNavigate()
   const location = useLocation()
+  const { id } = useParams()
 
   const handleSend = (e: React.FormEvent) => {
     e.preventDefault()
@@ -107,6 +112,17 @@ export default function ChatPage(props: { disableCustomTheme?: boolean }) {
     setMessages((prev) => [...prev, input])
     setInput('')
   }
+
+  useEffect(() => {
+    axios
+      .get(`http://localhost:5000/api/lobby/${id}`)
+      .then((res) => {
+        if (res.data.lobby) {
+          setLobbyData(res.data.lobby)
+        }
+      })
+      .catch((err) => console.log(err))
+  }, [])
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -131,7 +147,7 @@ export default function ChatPage(props: { disableCustomTheme?: boolean }) {
             mb={1}
           >
             <Typography variant="h5" fontWeight="bold">
-              {lobbyName}
+              {lobbyData?.name || 'Test chat page'}
             </Typography>
             <IconButton
               onClick={() => navigate('/')}
