@@ -134,7 +134,10 @@ export default function App(props: { disableCustomTheme?: boolean }) {
                   ) : (
                     <List disablePadding>
                       {lobbies.map((lobby, index) => (
-                        <Box key={lobby.id}>
+                        <Box
+                          key={lobby.id}
+                          onClick={() => navigate(`/chat/${lobby.id}`)}
+                        >
                           <ListItem
                             sx={{
                               cursor: 'pointer',

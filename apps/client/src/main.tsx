@@ -9,6 +9,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router'
 import ProfilePage from './pages/Profile.tsx'
 import NotForLoggedInUsers from './components/NotForLoggedUsers.tsx'
 import CreateLobbyPage from './pages/CreateLobby.tsx'
+import ChatPage from './pages/ChatPage.tsx'
 
 const router = createBrowserRouter([
   {
@@ -48,6 +49,14 @@ const router = createBrowserRouter([
     element: (
       <PrivateRoute>
         <ProfilePage />
+      </PrivateRoute>
+    ),
+  },
+  {
+    path: '/chat/:id',
+    element: (
+      <PrivateRoute>
+        <ChatPage />
       </PrivateRoute>
     ),
   },
