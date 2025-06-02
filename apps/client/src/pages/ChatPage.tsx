@@ -11,7 +11,7 @@ import {
 import SendIcon from '@mui/icons-material/Send'
 import { styled } from '@mui/material/styles'
 import AppTheme from '../mui/components/Apptheme'
-import { useNavigate } from 'react-router'
+import { useLocation, useNavigate } from 'react-router'
 import HomeIcon from '@mui/icons-material/Home'
 
 const ChatContainer = styled(Stack)(({ theme }) => ({
@@ -99,6 +99,7 @@ export default function ChatPage(props: { disableCustomTheme?: boolean }) {
     'Example lobby name'
   )
   const navigate = useNavigate()
+  const location = useLocation()
 
   const handleSend = (e: React.FormEvent) => {
     e.preventDefault()
@@ -110,6 +111,12 @@ export default function ChatPage(props: { disableCustomTheme?: boolean }) {
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages])
+
+  useEffect(() => {
+    if (!location.state?.fromValidPage) {
+      navigate('/')
+    }
+  }, [location, navigate])
 
   return (
     <AppTheme {...props}>

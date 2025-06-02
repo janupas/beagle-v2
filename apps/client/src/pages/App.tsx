@@ -136,7 +136,11 @@ export default function App(props: { disableCustomTheme?: boolean }) {
                       {lobbies.map((lobby, index) => (
                         <Box
                           key={lobby.id}
-                          onClick={() => navigate(`/chat/${lobby.id}`)}
+                          onClick={() =>
+                            navigate(`/chat/${lobby.id}`, {
+                              state: { fromValidPage: true },
+                            })
+                          }
                         >
                           <ListItem
                             sx={{
