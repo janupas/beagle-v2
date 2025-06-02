@@ -11,6 +11,8 @@ import {
 import SendIcon from '@mui/icons-material/Send'
 import { styled } from '@mui/material/styles'
 import AppTheme from '../mui/components/Apptheme'
+import { useNavigate } from 'react-router'
+import HomeIcon from '@mui/icons-material/Home'
 
 const ChatContainer = styled(Stack)(({ theme }) => ({
   minHeight: '100dvh',
@@ -96,6 +98,7 @@ export default function ChatPage(props: { disableCustomTheme?: boolean }) {
   const [lobbyName, setLobbyName] = useState<string | null>(
     'Example lobby name'
   )
+  const navigate = useNavigate()
 
   const handleSend = (e: React.FormEvent) => {
     e.preventDefault()
@@ -114,14 +117,23 @@ export default function ChatPage(props: { disableCustomTheme?: boolean }) {
       <ChatContainer>
         <ChatCard>
           {/* Group Title */}
-          <Typography
-            variant="h5"
-            textAlign="center"
-            fontWeight="bold"
-            gutterBottom
+          <Stack
+            direction="row"
+            justifyContent="space-between"
+            alignItems="center"
+            mb={1}
           >
-            {lobbyName}
-          </Typography>
+            <Typography variant="h5" fontWeight="bold">
+              {lobbyName}
+            </Typography>
+            <IconButton
+              onClick={() => navigate('/')}
+              aria-label="Go to homepage"
+              color="primary"
+            >
+              <HomeIcon />
+            </IconButton>
+          </Stack>
 
           {/* Chat Box */}
           <ChatBox>
