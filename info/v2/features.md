@@ -9,3 +9,9 @@
 ### [done] Profile page
 
 ### [done] Avatar upload
+
+### [done] Lobby page
+
+### [done] Create new lobby
+
+### [done] Chat page

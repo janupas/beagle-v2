@@ -10,6 +10,7 @@ import ProfilePage from './pages/Profile.tsx'
 import NotForLoggedInUsers from './components/NotForLoggedUsers.tsx'
 import CreateLobbyPage from './pages/CreateLobby.tsx'
 import ChatPage from './pages/ChatPage.tsx'
+import OnlineUsersPage from './pages/OnlineUsers.tsx'
 
 const router = createBrowserRouter([
   {
@@ -57,6 +58,14 @@ const router = createBrowserRouter([
     element: (
       <PrivateRoute>
         <ChatPage />
+      </PrivateRoute>
+    ),
+  },
+  {
+    path: '/users/online',
+    element: (
+      <PrivateRoute>
+        <OnlineUsersPage />
       </PrivateRoute>
     ),
   },

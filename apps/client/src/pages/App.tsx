@@ -16,6 +16,7 @@ import AppTheme from '../mui/components/Apptheme'
 import { useNavigate } from 'react-router'
 import { useEffect, useState } from 'react'
 import axios from 'axios'
+import { socket } from '../socket/socket'
 
 const Card = styled(MuiCard)(({ theme }) => ({
   padding: theme.spacing(4),
@@ -80,6 +81,10 @@ export default function App(props: { disableCustomTheme?: boolean }) {
         }
       })
       .catch((err) => console.log(err))
+  }, [])
+
+  useEffect(() => {
+    console.log(socket)
   }, [])
 
   return (
