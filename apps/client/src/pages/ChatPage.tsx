@@ -104,7 +104,6 @@ export default function ChatPage(props: { disableCustomTheme?: boolean }) {
     admin_id: string
   }>()
   const navigate = useNavigate()
-  const location = useLocation()
   const { id } = useParams()
   const [loading, setLoading] = useState(true)
 
@@ -128,17 +127,13 @@ export default function ChatPage(props: { disableCustomTheme?: boolean }) {
         console.log(err)
         setLoading(false)
       })
+
+    setLoading(false)
   }, [])
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages])
-
-  useEffect(() => {
-    if (!location.state?.fromValidPage) {
-      navigate('/')
-    }
-  }, [location, navigate])
 
   return (
     <AppTheme {...props}>
@@ -208,7 +203,7 @@ export default function ChatPage(props: { disableCustomTheme?: boolean }) {
             <>
               <Box display="flex" justifyContent="center" alignItems="center">
                 <Box p={4}>
-                  <Typography variant="caption">
+                  <Typography variant="body1">
                     Sorry lobby cannot be found...
                   </Typography>
                 </Box>
