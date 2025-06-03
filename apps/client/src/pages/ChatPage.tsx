@@ -12,7 +12,7 @@ import {
 import SendIcon from '@mui/icons-material/Send'
 import { styled } from '@mui/material/styles'
 import AppTheme from '../mui/components/Apptheme'
-import { useLocation, useNavigate, useParams } from 'react-router'
+import { useNavigate, useParams } from 'react-router'
 import HomeIcon from '@mui/icons-material/Home'
 import axios from 'axios'
 
