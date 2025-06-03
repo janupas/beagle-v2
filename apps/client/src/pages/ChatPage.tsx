@@ -15,6 +15,7 @@ import AppTheme from '../mui/components/Apptheme'
 import { useNavigate, useParams } from 'react-router'
 import HomeIcon from '@mui/icons-material/Home'
 import axios from 'axios'
+import { UserAuth } from '../context/AuthContext'
 
 const ChatContainer = styled(Stack)(({ theme }) => ({
   minHeight: '100dvh',
@@ -106,6 +107,8 @@ export default function ChatPage(props: { disableCustomTheme?: boolean }) {
   const navigate = useNavigate()
   const { id } = useParams()
   const [loading, setLoading] = useState(true)
+  const [, setUser] = useState()
+  const { session }: any = UserAuth()
 
   const handleSend = (e: React.FormEvent) => {
     e.preventDefault()
@@ -115,21 +118,40 @@ export default function ChatPage(props: { disableCustomTheme?: boolean }) {
   }
 
   useEffect(() => {
-    axios
-      .get(`http://localhost:5000/api/lobby/${id}`)
-      .then((res) => {
-        if (res.data.lobby) {
-          setLobbyData(res.data.lobby)
-          setLoading(false)
-        }
-      })
-      .catch((err) => {
-        console.log(err)
-        setLoading(false)
-      })
+    const fetchData = async () => {
+      try {
+        setLoading(true)
 
-    setLoading(false)
-  }, [])
+        const userRes = await axios.get(
+          `http://localhost:5000/api/users/${session.user.id}`
+        )
+        const fetchedUser = userRes.data.user
+        setUser(fetchedUser)
+
+        const lobbyRes = await axios.get(
+          `http://localhost:5000/api/lobby/${id}`
+        )
+        const fetchedLobby = lobbyRes.data.lobby
+        if (fetchedLobby) {
+          setLobbyData(fetchedLobby)
+        }
+
+        // make the socket emit
+        console.log('Fetched user:', fetchedUser)
+        console.log('Fetched lobby:', fetchedLobby)
+      } catch (err) {
+        console.error(err)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchData()
+
+    return () => {
+      // leave room emit
+    }
+  }, [session.user.id, id])
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' })

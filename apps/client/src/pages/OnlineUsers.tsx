@@ -1,6 +1,5 @@
 import {
   Box,
-  Button,
   Typography,
   Stack,
   Card as MuiCard,
@@ -9,14 +8,10 @@ import {
   ListItem,
   ListItemText,
   Divider,
-  CircularProgress,
 } from '@mui/material'
 import { styled } from '@mui/material/styles'
 import AppTheme from '../mui/components/Apptheme'
-import { useNavigate } from 'react-router'
-import { useEffect, useState } from 'react'
-import axios from 'axios'
-import { socket } from '../socket/socket'
+import { useState } from 'react'
 
 const Card = styled(MuiCard)(({ theme }) => ({
   padding: theme.spacing(4),
@@ -49,12 +44,10 @@ const LobbyContainer = styled(Stack)(({ theme }) => ({
 }))
 
 export default function OnlineUsers(props: { disableCustomTheme?: boolean }) {
-  const navigate = useNavigate()
-  const [users, setUsers] = useState([
+  const [users] = useState([
     { id: '1', username: 'Alice' },
     { id: '2', username: 'Bob' },
   ])
-  const [loading, setLoading] = useState(false)
 
   return (
     <AppTheme {...props}>

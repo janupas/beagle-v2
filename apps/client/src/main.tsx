@@ -1,5 +1,4 @@
 import App from './pages/App.tsx'
-import { StrictMode } from 'react'
 import SignIn from './pages/SignIn.tsx'
 import SignUp from './pages/Signup.tsx'
 import { createRoot } from 'react-dom/client'
@@ -72,9 +71,9 @@ const router = createBrowserRouter([
 ])
 
 createRoot(document.getElementById('root')!).render(
-  <StrictMode>
+  <>
     <AuthContextProvider>
       <RouterProvider router={router} />
     </AuthContextProvider>
-  </StrictMode>
+  </>
 )
