@@ -16,7 +16,6 @@ import { useNavigate, useParams } from 'react-router'
 import HomeIcon from '@mui/icons-material/Home'
 import axios from 'axios'
 import { UserAuth } from '../context/AuthContext'
-import { socket } from '../socket/socket'
 
 const ChatContainer = styled(Stack)(({ theme }) => ({
   minHeight: '100dvh',
