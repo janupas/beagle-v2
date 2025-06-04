@@ -16,6 +16,7 @@ import { useNavigate, useParams } from 'react-router'
 import HomeIcon from '@mui/icons-material/Home'
 import axios from 'axios'
 import { UserAuth } from '../context/AuthContext'
+import { socket } from '../socket/socket'
 
 const ChatContainer = styled(Stack)(({ theme }) => ({
   minHeight: '100dvh',
@@ -135,10 +136,6 @@ export default function ChatPage(props: { disableCustomTheme?: boolean }) {
         if (fetchedLobby) {
           setLobbyData(fetchedLobby)
         }
-
-        // make the socket emit
-        console.log('Fetched user:', fetchedUser)
-        console.log('Fetched lobby:', fetchedLobby)
       } catch (err) {
         console.error(err)
       } finally {
@@ -147,10 +144,6 @@ export default function ChatPage(props: { disableCustomTheme?: boolean }) {
     }
 
     fetchData()
-
-    return () => {
-      // leave room emit
-    }
   }, [session.user.id, id])
 
   useEffect(() => {

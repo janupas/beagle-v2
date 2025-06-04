@@ -19,11 +19,47 @@ const io = new Server(httpServer, {
   },
 })
 
+let activeUsers: any = {}
+
 /**
  * Socket connection established
  */
 io.on('connection', (socket) => {
   logger.info('Socket connected: ' + socket.id)
+
+  /**
+   * We expect the payload object like this
+   *
+   * {
+   *   user: {
+   *    avatar: string,
+   *    created_at: string,
+   *    display_name: string,
+   *    id: number,
+   *    supabase_id: string
+   *   },
+   *   lobby: {
+   *    admin_id: string,
+   *    created_at: string,
+   *    id: number,
+   *    name: string
+   *   }
+   * }
+   */
+  socket.on('user-connect', (payload) => {
+    const userDetails = payload.user
+
+    if (!activeUsers.hasOwnProperty(userDetails.supabase_uid)) {
+      activeUsers[userDetails.supabase_uid] = {
+        userDetails: userDetails,
+        sockets: [socket.id],
+      }
+    } else {
+      activeUsers[userDetails.supabase_uid].sockets.push(socket.id)
+    }
+
+    logger.info(activeUsers)
+  })
 })
 
 /**
