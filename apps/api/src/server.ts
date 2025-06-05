@@ -20,6 +20,7 @@ const io = new Server(httpServer, {
 })
 
 let activeUsers: any = {}
+let activeSockets: any = {}
 
 /**
  * Socket connection established
@@ -49,16 +50,56 @@ io.on('connection', (socket) => {
   socket.on('user-connect', (payload) => {
     const userDetails = payload.user
 
+    socket.data.supabase_uid = userDetails.supabase_uid
+
+    if (!activeSockets.hasOwnProperty(socket.id)) {
+      activeSockets[socket.id] = socket
+    }
+
     if (!activeUsers.hasOwnProperty(userDetails.supabase_uid)) {
       activeUsers[userDetails.supabase_uid] = {
         userDetails: userDetails,
         sockets: [socket.id],
       }
     } else {
-      activeUsers[userDetails.supabase_uid].sockets.push(socket.id)
+      // check if the socket id exists already
+      let check = false
+
+      activeUsers[userDetails.supabase_uid].sockets.forEach((sId: string) => {
+        if (sId === socket.id) {
+          check = true
+        }
+      })
+
+      if (!check) activeUsers[userDetails.supabase_uid].sockets.push(socket.id)
     }
 
     logger.info(activeUsers)
+    logger.info(activeSockets)
+
+    // emitting the active users
+    io.emit('users', activeUsers)
+  })
+
+  socket.on('disconnect', () => {
+    logger.info('User disconnected: ' + socket.id)
+
+    const socketId = socket.id
+    const supabase_uid = activeSockets[socketId].data.supabase_uid
+
+    let userSocketList = activeUsers[supabase_uid].sockets
+    userSocketList.splice(userSocketList.indexOf(socketId), 1)
+    delete activeSockets[socketId]
+
+    if (userSocketList.length === 0) {
+      delete activeUsers[supabase_uid]
+    }
+
+    logger.info(activeUsers)
+    logger.info(activeSockets)
+
+    // emitting the active users
+    io.emit('users', activeUsers)
   })
 })
 

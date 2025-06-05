@@ -10,6 +10,7 @@ import NotForLoggedInUsers from './components/NotForLoggedUsers.tsx'
 import CreateLobbyPage from './pages/CreateLobby.tsx'
 import ChatPage from './pages/ChatPage.tsx'
 import OnlineUsersPage from './pages/OnlineUsers.tsx'
+import { SocketProvider } from './context/SockeContext.tsx'
 
 const router = createBrowserRouter([
   {
@@ -73,7 +74,9 @@ const router = createBrowserRouter([
 createRoot(document.getElementById('root')!).render(
   <>
     <AuthContextProvider>
-      <RouterProvider router={router} />
+      <SocketProvider>
+        <RouterProvider router={router} />
+      </SocketProvider>
     </AuthContextProvider>
   </>
 )

@@ -17,7 +17,6 @@ import { useNavigate } from 'react-router'
 import { useEffect, useState } from 'react'
 import axios from 'axios'
 import { socket } from '../socket/socket'
-import { UserAuth } from '../context/AuthContext'
 
 const Card = styled(MuiCard)(({ theme }) => ({
   padding: theme.spacing(4),
@@ -58,14 +57,13 @@ const dummyLobbies = [
   { id: 'apo128', name: 'Speed Game' },
 ]
 
-export default function App(props: { disableCustomTheme?: boolean }) {
+function App(props: { disableCustomTheme?: boolean }) {
   const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
   const [lobbies, setLobbies] = useState<
     Array<{ id: number; name: string; created_at: string; adminId: string }>
   >([])
   const [lobbiesLoading, setLobbiesLoading] = useState<boolean>(true)
-  const { session }: any = UserAuth()
 
   const handleCreate = () => {
     setLoading(true)
@@ -88,27 +86,6 @@ export default function App(props: { disableCustomTheme?: boolean }) {
   useEffect(() => {
     console.log(socket)
   }, [])
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true)
-
-        const userRes = await axios.get(
-          `http://localhost:5000/api/users/${session.user.id}`
-        )
-        const fetchedUser = userRes.data.user
-
-        socket.emit('user-connect', { user: fetchedUser })
-      } catch (err) {
-        console.error(err)
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    fetchData()
-  }, [session.user.id])
 
   return (
     <AppTheme {...props}>
@@ -202,3 +179,5 @@ export default function App(props: { disableCustomTheme?: boolean }) {
     </AppTheme>
   )
 }
+
+export default App
