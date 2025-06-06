@@ -21,3 +21,7 @@
 ### [] User disconnect socket management
 
 ### [] Online users display
+
+BUG FIXES
+
+### [] Socket not connecting when logout->signin again
