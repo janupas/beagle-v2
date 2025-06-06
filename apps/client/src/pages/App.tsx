@@ -90,6 +90,7 @@ function App(props: { disableCustomTheme?: boolean }) {
   return (
     <AppTheme {...props}>
       <CssBaseline enableColorScheme />
+
       <LobbyContainer>
         <Card>
           <Typography variant="h4" textAlign="center">

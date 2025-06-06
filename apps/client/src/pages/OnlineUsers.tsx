@@ -44,15 +44,25 @@ const LobbyContainer = styled(Stack)(({ theme }) => ({
   }),
 }))
 
+interface UserI {
+  sockets: Array<string>
+  userDetails: {
+    avatar: string
+    created_at: string
+    supabase_uid: string
+    display_name: string
+    id: number
+  }
+}
+
 export default function OnlineUsers(props: { disableCustomTheme?: boolean }) {
-  const [users] = useState([
-    { id: '1', username: 'Alice' },
-    { id: '2', username: 'Bob' },
-  ])
+  const [users, setUsers] = useState<Array<UserI>>([])
 
   useEffect(() => {
     socket.on('users', (data) => {
-      console.log(data)
+      if (data) {
+        setUsers(Object.values(data))
+      }
     })
 
     // Clean up the listener when the component unmounts
@@ -81,7 +91,7 @@ export default function OnlineUsers(props: { disableCustomTheme?: boolean }) {
             >
               <List disablePadding>
                 {users.map((user, index) => (
-                  <Box key={user.id}>
+                  <Box key={user.userDetails.id}>
                     <ListItem
                       sx={{
                         cursor: 'pointer',
@@ -112,7 +122,7 @@ export default function OnlineUsers(props: { disableCustomTheme?: boolean }) {
                               }}
                             />
                             <Typography variant="body1">
-                              {user.username}
+                              {user.userDetails.display_name}
                             </Typography>
                           </Box>
                         }
