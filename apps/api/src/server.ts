@@ -52,8 +52,10 @@ io.on('connection', (socket) => {
 
     socket.data.supabase_uid = userDetails.supabase_uid
 
-    if (!activeSockets.hasOwnProperty(socket.id)) {
-      activeSockets[socket.id] = socket
+    if (userDetails.supabase_uid) {
+      if (!activeSockets.hasOwnProperty(socket.id)) {
+        activeSockets[socket.id] = socket
+      }
     }
 
     if (!activeUsers.hasOwnProperty(userDetails.supabase_uid)) {
@@ -84,14 +86,20 @@ io.on('connection', (socket) => {
   socket.on('disconnect', () => {
     logger.info('User disconnected: ' + socket.id)
 
-    const socketId = socket.id
-    const supabase_uid = activeSockets[socketId].data.supabase_uid
+    const socketData = activeSockets[socket.id]?.data
+    if (!socketData) return
 
-    let userSocketList = activeUsers[supabase_uid].sockets
-    userSocketList.splice(userSocketList.indexOf(socketId), 1)
+    const socketId = socket.id
+    const supabase_uid = socketData.supabase_uid
+
+    let userSocketList = activeUsers[supabase_uid]?.sockets
+    if (userSocketList) {
+      userSocketList.splice(userSocketList.indexOf(socketId), 1)
+    }
+
     delete activeSockets[socketId]
 
-    if (userSocketList.length === 0) {
+    if (userSocketList && userSocketList.length === 0) {
       delete activeUsers[supabase_uid]
     }
 
