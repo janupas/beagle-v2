@@ -105,9 +105,10 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
         // log for success
         setLoading(false)
         navigate('/profile')
+        window.location.reload()
         console.log({
           success: true,
-          message: 'Signup successfull',
+          message: 'Signin successfull',
         })
       } else {
         setLoading(false)

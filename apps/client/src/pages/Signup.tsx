@@ -143,6 +143,7 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
           })
           .then(() => {
             navigate('/profile')
+            window.location.reload()
             console.log({
               success: true,
               message: 'Signup successfull',
