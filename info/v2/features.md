@@ -24,4 +24,4 @@
 
 BUG FIXES
 
-### [] Socket not connecting when logout->signin again
+### [50%] Socket not connecting when logout->signin again
