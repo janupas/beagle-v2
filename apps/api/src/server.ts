@@ -49,37 +49,35 @@ io.on('connection', (socket) => {
    */
   socket.on('user-connect', (payload) => {
     const userDetails = payload.user
+    const supabase_uid = userDetails?.supabase_uid
 
-    socket.data.supabase_uid = userDetails.supabase_uid
+    if (!supabase_uid) return
 
-    if (userDetails.supabase_uid) {
-      if (!activeSockets.hasOwnProperty(socket.id)) {
-        activeSockets[socket.id] = socket
-      }
+    // Attach user ID to the socket's data
+    socket.data.supabase_uid = supabase_uid
+
+    // Register the socket if not already tracked
+    if (!activeSockets[socket.id]) {
+      activeSockets[socket.id] = socket
     }
 
-    if (!activeUsers.hasOwnProperty(userDetails.supabase_uid)) {
-      activeUsers[userDetails.supabase_uid] = {
+    // Register or update the user entry
+    if (!activeUsers[supabase_uid]) {
+      activeUsers[supabase_uid] = {
         userDetails: userDetails,
         sockets: [socket.id],
       }
     } else {
-      // check if the socket id exists already
-      let check = false
-
-      activeUsers[userDetails.supabase_uid].sockets.forEach((sId: string) => {
-        if (sId === socket.id) {
-          check = true
-        }
-      })
-
-      if (!check) activeUsers[userDetails.supabase_uid].sockets.push(socket.id)
+      const userSockets = activeUsers[supabase_uid].sockets
+      if (!userSockets.includes(socket.id)) {
+        userSockets.push(socket.id)
+      }
     }
 
     logger.info(activeUsers)
     logger.info(activeSockets)
 
-    // emitting the active users
+    // Emit updated active users
     io.emit('users', activeUsers)
   })
 

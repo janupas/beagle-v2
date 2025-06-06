@@ -23,6 +23,7 @@ import { UserAuth } from '../context/AuthContext'
 import EditIcon from '@mui/icons-material/Edit'
 import axios from 'axios'
 import { supabase } from '../supabaseClient'
+import { socket } from '../socket/socket'
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
@@ -85,6 +86,7 @@ export default function ProfilePage(props: { disableCustomTheme?: boolean }) {
     setSignoutLoading(true)
 
     try {
+      socket.disconnect()
       await signOut()
       setSignoutLoading(false)
       navigate('/signin')
