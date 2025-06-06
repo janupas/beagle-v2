@@ -4,10 +4,5 @@ Beagle chat application written again with more features and a more goodlooking 
 
 I decided to use mostly outsourced themes for the UI since I want to focus mostly on functionality
 
-A little sneak peek to auth pages
-
-Sign In page
-![Signin page](/screenshots/v2/signin.png)
-
-Sign up page
-![Signup page](/screenshots/v2/signup.png)
+The tech stack I am using for this project
+![Tech stack](/info/v2/tech%20stack.png)

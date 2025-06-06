@@ -15,3 +15,9 @@
 ### [done] Create new lobby
 
 ### [done] Chat page
+
+### [] Multiple tab socket management
+
+### [] User disconnect socket management
+
+### [] Online users display
