@@ -11,7 +11,8 @@ import {
 } from '@mui/material'
 import { styled } from '@mui/material/styles'
 import AppTheme from '../mui/components/Apptheme'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { socket } from '../socket/socket'
 
 const Card = styled(MuiCard)(({ theme }) => ({
   padding: theme.spacing(4),
@@ -48,6 +49,17 @@ export default function OnlineUsers(props: { disableCustomTheme?: boolean }) {
     { id: '1', username: 'Alice' },
     { id: '2', username: 'Bob' },
   ])
+
+  useEffect(() => {
+    socket.on('users', (data) => {
+      console.log(data)
+    })
+
+    // Clean up the listener when the component unmounts
+    return () => {
+      socket.off('users')
+    }
+  }, [socket])
 
   return (
     <AppTheme {...props}>
