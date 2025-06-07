@@ -21,6 +21,7 @@ import FormControlLabel from '@mui/material/FormControlLabel'
 import ForgotPassword from '../mui/components/ForgotPassword.tsx'
 import { GoogleIcon, FacebookIcon } from '../mui/components/CustomIcons.tsx'
 import ColorModeSelect from '../mui/components/customization/colorModeSelect.tsx'
+import { socket } from '../socket/socket.ts'
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
@@ -105,7 +106,8 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
         // log for success
         setLoading(false)
         navigate('/profile')
-        window.location.reload()
+        socket.connect()
+        // window.location.reload()
         console.log({
           success: true,
           message: 'Signin successfull',
