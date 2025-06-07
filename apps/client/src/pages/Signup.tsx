@@ -22,7 +22,6 @@ import FormControlLabel from '@mui/material/FormControlLabel'
 import { GoogleIcon, FacebookIcon } from '../mui/components/CustomIcons'
 import ColorModeSelect from '../mui/components/customization/colorModeSelect'
 import axios from 'axios'
-import { socket } from '../socket/socket'
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
