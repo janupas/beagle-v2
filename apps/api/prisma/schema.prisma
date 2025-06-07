@@ -20,7 +20,9 @@ model User {
   display_name String   @db.VarChar(150)
   avatar       String   @db.LongText
   created_at   DateTime @default(now())
-  lobbies      Lobby[]  @relation("userLobbies")
+
+  lobbies  Lobby[]   @relation("userLobbies")
+  messages Message[] @relation("userMessages")
 
   @@map("users")
 }
@@ -30,7 +32,23 @@ model Lobby {
   name       String   @db.VarChar(50)
   created_at DateTime @default(now())
   adminId    String
-  admin      User     @relation("userLobbies", fields: [adminId], references: [supabase_uid])
+
+  admin    User      @relation("userLobbies", fields: [adminId], references: [supabase_uid])
+  messages Message[] @relation("roomMessages")
 
   @@map("lobbies")
+}
+
+model Message {
+  id         Int      @id @default(autoincrement())
+  value      String   @db.LongText
+  created_at DateTime @default(now())
+
+  userId String
+  roomId Int
+
+  user User  @relation("userMessages", fields: [userId], references: [supabase_uid])
+  room Lobby @relation("roomMessages", fields: [roomId], references: [id])
+
+  @@map("messages")
 }

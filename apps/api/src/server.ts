@@ -6,6 +6,7 @@ import cors from 'cors'
 import { Server } from 'socket.io'
 import { createServer } from 'http'
 import { logger } from './config/logger'
+import { insertNewMessageService } from './db/queries'
 
 const app = express()
 app.use(express.json())
@@ -106,6 +107,18 @@ io.on('connection', (socket) => {
 
     // emitting the active users
     io.emit('users', activeUsers)
+  })
+
+  /**
+   * Socket event to handle messages
+   */
+  socket.on('message', (payload) => {
+    insertNewMessageService({
+      value: payload.data.value,
+      userId: payload.user.supabase_uid,
+      roomId: payload.room.id,
+    })
+    logger.info(payload)
   })
 })
 

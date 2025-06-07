@@ -16,6 +16,7 @@ import { useNavigate, useParams } from 'react-router'
 import HomeIcon from '@mui/icons-material/Home'
 import axios from 'axios'
 import { UserAuth } from '../context/AuthContext'
+import { socket } from '../socket/socket'
 
 const ChatContainer = styled(Stack)(({ theme }) => ({
   minHeight: '100dvh',
@@ -107,14 +108,29 @@ export default function ChatPage(props: { disableCustomTheme?: boolean }) {
   const navigate = useNavigate()
   const { id } = useParams()
   const [loading, setLoading] = useState(true)
-  const [, setUser] = useState()
+  const [user, setUser] = useState()
   const { session }: any = UserAuth()
 
   const handleSend = (e: React.FormEvent) => {
     e.preventDefault()
     if (!input.trim()) return
-    setMessages((prev) => [...prev, input])
-    setInput('')
+
+    if (user && lobbyData) {
+      setMessages((prev) => [...prev, input])
+
+      const msgInfo: any = {
+        room: lobbyData,
+        user: user,
+        data: {
+          value: input,
+        },
+      }
+
+      socket.emit('message', msgInfo)
+      setInput('')
+    } else {
+      console.log('SOME ERROR OCCOURED')
+    }
   }
 
   useEffect(() => {
@@ -126,7 +142,9 @@ export default function ChatPage(props: { disableCustomTheme?: boolean }) {
           `http://localhost:5000/api/users/${session.user.id}`
         )
         const fetchedUser = userRes.data.user
-        setUser(fetchedUser)
+        if (fetchedUser) {
+          setUser(fetchedUser)
+        }
 
         const lobbyRes = await axios.get(
           `http://localhost:5000/api/lobby/${id}`

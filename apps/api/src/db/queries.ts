@@ -88,6 +88,9 @@ export const getSingleUserService = async (
   }
 }
 
+/**
+ * Patch a request to update user avatar field
+ */
 export const updateUserAvatarService = async (id: string, url: string) => {
   try {
     const updatedUser = await prisma.user.update({
@@ -111,6 +114,9 @@ export const updateUserAvatarService = async (id: string, url: string) => {
   }
 }
 
+/**
+ * Create a new lobby in the database
+ */
 export const createNewLobbyService = async ({
   name,
   adminId,
@@ -142,6 +148,9 @@ export const createNewLobbyService = async ({
   }
 }
 
+/**
+ * Gets all the lobbies from the database
+ */
 export const getAllLobbiesService = async () => {
   try {
     const lobbies = await prisma.lobby.findMany()
@@ -157,6 +166,9 @@ export const getAllLobbiesService = async () => {
   }
 }
 
+/**
+ * Get a single lobby using the id
+ */
 export const getLobbyInformationService = async (id: number) => {
   try {
     const lobby = await prisma.lobby.findFirst({
@@ -168,6 +180,36 @@ export const getLobbyInformationService = async (id: number) => {
     if (lobby) {
       logger.info('Lobby info: ' + JSON.stringify(lobby))
       return lobby
+    }
+
+    return false
+  } catch (err) {
+    logger.error(err)
+    return false
+  }
+}
+
+export const insertNewMessageService = async ({
+  userId,
+  roomId,
+  value,
+}: {
+  userId: string
+  roomId: number
+  value: string
+}) => {
+  try {
+    const insertedMessage = await prisma.message.create({
+      data: {
+        value: value,
+        userId: userId,
+        roomId: roomId,
+      },
+    })
+
+    if (insertedMessage) {
+      logger.info('Inserted message: ' + JSON.stringify(insertedMessage))
+      return
     }
 
     return false
