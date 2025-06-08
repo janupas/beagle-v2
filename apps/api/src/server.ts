@@ -109,6 +109,11 @@ io.on('connection', (socket) => {
     io.emit('users', activeUsers)
   })
 
+  socket.on('initial-room-join', (roomId: number) => {
+    socket.join(roomId.toString())
+    logger.info('room id: ' + roomId)
+  })
+
   /**
    * Socket event to handle messages
    */

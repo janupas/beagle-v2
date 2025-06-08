@@ -167,6 +167,12 @@ export default function ChatPage(props: { disableCustomTheme?: boolean }) {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages])
 
+  useEffect(() => {
+    if (id) {
+      socket.emit('initial-room-join', id)
+    }
+  }, [])
+
   return (
     <AppTheme {...props}>
       <CssBaseline enableColorScheme />
