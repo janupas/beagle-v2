@@ -92,11 +92,15 @@ const InputContainer = styled('form')(({ theme }) => ({
 }))
 
 export default function ChatPage(props: { disableCustomTheme?: boolean }) {
-  const [messages, setMessages] = useState<string[]>([
-    'hello',
-    'hi',
-    'welcome to chat',
-  ])
+  const [messages, setMessages] = useState<
+    Array<{
+      created_at?: string
+      id?: number
+      roomId: number
+      userId: string
+      value: string
+    }>
+  >([])
   const [input, setInput] = useState('')
   const chatEndRef = useRef<HTMLDivElement | null>(null)
   const [lobbyData, setLobbyData] = useState<{
@@ -116,7 +120,13 @@ export default function ChatPage(props: { disableCustomTheme?: boolean }) {
     if (!input.trim()) return
 
     if (user && lobbyData) {
-      setMessages((prev) => [...prev, input])
+      const newMessage = {
+        id: parseInt(crypto.randomUUID()),
+        roomId: lobbyData.id,
+        userId: session.user.supabase_id,
+        value: input,
+      }
+      setMessages((prev) => [...prev, newMessage])
 
       const msgInfo: any = {
         room: lobbyData,
@@ -171,7 +181,7 @@ export default function ChatPage(props: { disableCustomTheme?: boolean }) {
     if (id) {
       socket.emit('initial-room-join', parseInt(id))
       socket.on('messages', (data) => {
-        console.log(data)
+        setMessages(data)
       })
     }
   }, [])
@@ -214,7 +224,7 @@ export default function ChatPage(props: { disableCustomTheme?: boolean }) {
                   {/* Chat Box */}
                   <ChatBox>
                     {messages.map((msg, idx) => (
-                      <ChatBubble key={idx}>{msg}</ChatBubble>
+                      <ChatBubble key={idx}>{msg.value}</ChatBubble>
                     ))}
                     <div ref={chatEndRef} />
                   </ChatBox>
