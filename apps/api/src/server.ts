@@ -6,7 +6,7 @@ import cors from 'cors'
 import { Server } from 'socket.io'
 import { createServer } from 'http'
 import { logger } from './config/logger'
-import { insertNewMessageService } from './db/queries'
+import { getLobbyMessagesService, insertNewMessageService } from './db/queries'
 
 const app = express()
 app.use(express.json())
@@ -22,6 +22,33 @@ const io = new Server(httpServer, {
 
 let activeUsers: any = {}
 let activeSockets: any = {}
+
+const DUMMY_MESSAGES = [
+  {
+    id: 1,
+    value: 'Hellow',
+    userId: 2,
+    roomId: 7,
+  },
+  {
+    id: 2,
+    value: 'Hi',
+    userId: 2,
+    roomId: 7,
+  },
+  {
+    id: 3,
+    value: 'Good morning',
+    userId: 3,
+    roomId: 8,
+  },
+  {
+    id: 4,
+    value: 'Fuck you mate',
+    userId: 3,
+    roomId: 7,
+  },
+]
 
 /**
  * Socket connection established
@@ -109,9 +136,11 @@ io.on('connection', (socket) => {
     io.emit('users', activeUsers)
   })
 
-  socket.on('initial-room-join', (roomId: number) => {
+  socket.on('initial-room-join', async (roomId: number) => {
     socket.join(roomId.toString())
     logger.info('room id: ' + roomId)
+    const msgs = await getLobbyMessagesService(roomId)
+    io.to(roomId.toString()).emit('messages', msgs)
   })
 
   /**

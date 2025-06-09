@@ -218,3 +218,23 @@ export const insertNewMessageService = async ({
     return false
   }
 }
+
+export const getLobbyMessagesService = async (id: number) => {
+  try {
+    const returnedMessages = await prisma.message.findMany({
+      where: {
+        roomId: id,
+      },
+    })
+
+    if (returnedMessages) {
+      logger.info('Messages returned, ' + JSON.stringify(returnedMessages))
+      return returnedMessages
+    }
+
+    return false
+  } catch (err) {
+    logger.error(err)
+    return false
+  }
+}

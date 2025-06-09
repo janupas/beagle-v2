@@ -169,7 +169,10 @@ export default function ChatPage(props: { disableCustomTheme?: boolean }) {
 
   useEffect(() => {
     if (id) {
-      socket.emit('initial-room-join', id)
+      socket.emit('initial-room-join', parseInt(id))
+      socket.on('messages', (data) => {
+        console.log(data)
+      })
     }
   }, [])
 
