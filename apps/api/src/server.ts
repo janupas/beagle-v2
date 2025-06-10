@@ -151,8 +151,11 @@ io.on('connection', (socket) => {
       value: payload.data.value,
       userId: payload.user.supabase_uid,
       roomId: payload.room.id,
+      display_name: payload.user.display_name,
     })
     logger.info(payload)
+
+    // emit the sent message too
   })
 })
 

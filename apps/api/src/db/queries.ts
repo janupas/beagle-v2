@@ -193,10 +193,12 @@ export const insertNewMessageService = async ({
   userId,
   roomId,
   value,
+  display_name,
 }: {
   userId: string
   roomId: number
   value: string
+  display_name: string
 }) => {
   try {
     const insertedMessage = await prisma.message.create({
@@ -204,6 +206,7 @@ export const insertNewMessageService = async ({
         value: value,
         userId: userId,
         roomId: roomId,
+        sender_display_name: display_name,
       },
     })
 
