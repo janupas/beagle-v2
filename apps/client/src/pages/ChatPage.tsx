@@ -248,21 +248,25 @@ export default function ChatPage(props: { disableCustomTheme?: boolean }) {
                             color: isSender
                               ? 'primary.contrastText'
                               : 'text.primary',
-                            borderRadius: 3,
+                            borderRadius: 1.5,
                             px: 2,
                             py: 1.25,
                             mb: 1.25,
                             boxShadow: isSender
-                              ? '0 2px 8px rgba(25, 118, 210, 0.3)'
-                              : '0 1px 4px rgba(0, 0, 0, 0.1)',
+                              ? '0 2px 6px rgba(25, 118, 210, 0.2)'
+                              : '0 1px 3px rgba(0, 0, 0, 0.08)',
                             wordBreak: 'break-word',
                             fontSize: '0.95rem',
                             position: 'relative',
-                            borderTopRightRadius: isSender ? 0 : 12,
-                            borderTopLeftRadius: isSender ? 12 : 0,
+                            borderTopRightRadius: isSender ? 2 : 0.5,
+                            borderTopLeftRadius: isSender ? 0.5 : 2,
                             border: isSender
                               ? 'none'
-                              : '1px solid rgba(0, 0, 0, 0.12)',
+                              : '1px solid rgba(0, 0, 0, 0.1)',
+                            transition: 'background-color 0.3s ease',
+                            borderLeft: !isSender
+                              ? '4px solid #1976d2'
+                              : 'none',
                           }}
                         >
                           {/* Sender name for receiver messages */}
