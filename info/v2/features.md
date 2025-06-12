@@ -16,12 +16,8 @@
 
 ### [done] Chat page
 
-### [] Multiple tab socket management
-
-### [] User disconnect socket management
-
-### [] Online users display
+### [done] Online users display
 
 BUG FIXES
 
-### [50%] Socket not connecting when logout->signin again
+### [100%] Socket not connecting when logout->signin again
