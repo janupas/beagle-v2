@@ -1,7 +1,37 @@
-# Beagle V2
+# General Information
 
-### Key points
+This project is Beagle V2. A simple chat application. A lot of room for improvements. Lots of errors and bad mistakes too.
 
-- Beagle chat application written again with more features and a more goodlooking UI (hopefully).
-- I decided to use mostly outsourced themes for the UI since I want to focus mostly on functionality.
-- This has a lot of room for improvement and I fill check on them in the future.
+# Technologies
+
+Project is created with:
+
+- Frontend - Vite, React JS, Typescript, Material UI
+- Backend - Nodejs, Express, Typescript, Socket-io, Prisma
+
+# Images
+
+<div>
+ <h3>Lobby Page</h3>
+</div>
+<img width="500" src="./screenshots/v2/1.png"/>
+
+<div>
+ <h3>Chat Page</h3>
+</div>
+<img width="500" src="./screenshots/v2/2.png"/>
+
+<div>
+ <h3>Online users</h3>
+</div>
+<img width="500" src="./screenshots/v2/3.png"/>
+
+<div>
+ <h3>Profile Page</h3>
+</div>
+<img width="500" src="./screenshots/v2/4.png"/>
+
+<div>
+ <h3>Auth Page</h3>
+</div>
+<img width="500" src="./screenshots/v2/5.png"/>
