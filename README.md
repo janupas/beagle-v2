@@ -6,6 +6,7 @@ This project is Beagle V2. A simple chat application. A lot of room for improvem
 
 Project is created with:
 
+- Auth - Supabase
 - Frontend - Vite, React JS, Typescript, Material UI
 - Backend - Nodejs, Express, Typescript, Socket-io, Prisma
 
