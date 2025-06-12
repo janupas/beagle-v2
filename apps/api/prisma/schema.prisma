@@ -40,10 +40,11 @@ model Lobby {
 }
 
 model Message {
-  id                  Int      @id @default(autoincrement())
-  value               String   @db.LongText
-  created_at          DateTime @default(now())
-  sender_display_name String   @db.Text
+  id                  Int    @id @default(autoincrement())
+  value               String @db.LongText
+  created_at          String @db.Text
+  sender_display_name String @db.Text
+  type                String @db.Text
 
   userId String
   roomId Int

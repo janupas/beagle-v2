@@ -147,15 +147,27 @@ io.on('connection', (socket) => {
    * Socket event to handle messages
    */
   socket.on('message', (payload) => {
+    const created_time = Date.now().toString()
+
     insertNewMessageService({
       value: payload.data.value,
       userId: payload.user.supabase_uid,
       roomId: payload.room.id,
       display_name: payload.user.display_name,
+      type: payload.data.value,
+      created_at: created_time,
     })
     logger.info(payload)
 
     // emit the sent message too
+    io.to(payload.room.id.toString()).emit('message-back', {
+      value: payload.data.value,
+      userId: payload.user.supabase_uid,
+      roomId: payload.room.id,
+      sender_display_name: payload.user.display_name,
+      type: payload.data.value,
+      created_at: created_time,
+    })
   })
 })
 
