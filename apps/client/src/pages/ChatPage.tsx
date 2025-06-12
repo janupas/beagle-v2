@@ -72,19 +72,6 @@ const ChatBox = styled(Box)(({ theme }) => ({
   },
 }))
 
-const ChatBubble = styled(Box)(({ theme }) => ({
-  alignSelf: 'flex-end',
-  maxWidth: '80%',
-  padding: theme.spacing(1.2, 2),
-  backgroundColor: theme.palette.primary.main,
-  color: theme.palette.primary.contrastText,
-  borderRadius: theme.spacing(2),
-  boxShadow: '0 2px 6px rgba(0,0,0,0.1)',
-  wordBreak: 'break-word',
-  fontSize: '0.95rem',
-  transition: 'all 0.2s ease',
-}))
-
 const InputContainer = styled('form')(({ theme }) => ({
   display: 'flex',
   gap: theme.spacing(1),
