@@ -154,7 +154,7 @@ io.on('connection', (socket) => {
       userId: payload.user.supabase_uid,
       roomId: payload.room.id,
       display_name: payload.user.display_name,
-      type: payload.data.value,
+      type: 'message',
       created_at: created_time,
     })
     logger.info(payload)
